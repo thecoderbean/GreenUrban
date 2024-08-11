@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Edit Product</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar {
+            background-color: #28a745;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h2 {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">Green Urban</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'retailer_dashboard' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add_product' %}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'profile' %}">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Edit Product Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h2 class="mt-5">Edit Product</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ product_form.as_p }}
+                    <h5>Product Images</h5>
+                    <div id="image-formset">
+                        {{ formset.management_form }}
+                        {% for form in formset %}
+                            <div class="form-row">
+                                <div class="form-group col-md-10">
+                                    {{ form.as_p }}
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <button type="button" class="btn btn-danger remove-image-btn">&times;</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-secondary add-image-btn">Add Another Image</button>
+                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Add new image form
+            var formIdx = {{ formset.total_form_count }};
+            $('.add-image-btn').click(function() {
+                $('#image-formset').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
+                formIdx++;
+            });
+
+            // Remove image form
+            $('#image-formset').on('click', '.remove-image-btn', function() {
+                $(this).closest('.form-row').remove();
+            });
+        });
+    </script>
+
+    <!-- Empty form template for JS to clone -->
+    <div id="empty-form" class="d-none">
+        <div class="form-row">
+            <div class="form-group col-md-10">
+                {{ formset.empty_form.as_p }}
+            </div>
+            <div class="form-group col-md-2">
+                <button type="button" class="btn btn-danger remove-image-btn">&times;</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

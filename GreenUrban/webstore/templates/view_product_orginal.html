@@ -1,0 +1,401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Urban Shopping</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'homeassets/favicon.ico' %}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .carousel-inner img {
+            width: 100%;
+            height: auto;
+        }
+
+        .carousel-indicators [data-bs-target] {
+            background-color: #333;
+        }
+
+        .favorite-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .favorite-icon.heart-active {
+            color: red;
+        }
+
+        .fullscreen-modal .modal-dialog {
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .fullscreen-modal .modal-content {
+            height: 100vh;
+        }
+
+        .fullscreen-modal .modal-body {
+            padding: 0;
+        }
+
+        .fullscreen-modal .btn-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #000;
+            opacity: 1;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rating-bar .progress {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .rating-bar .progress-bar {
+            background-color: #ffc107;
+        }
+
+        .carousel-container {
+            margin-bottom: 30px;
+        }
+    </style>
+    
+</head>
+
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">GreenUrban</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'account' %}">Account</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'logout_user' %}">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Product Details Section-->
+    <section class="page-section bg-light" id="shopping">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Example Product -->
+                <div class="col-md-8 col-lg-6 mb-5">
+                    <div class="">
+                        <!-- Carousel -->
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                {% for image in images %}
+                                <div class="carousel-item active">
+                                    <img  src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                    <i class="fas fa-heart favorite-icon" id="favoriteIcon"></i>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <!-- Carousel End -->
+                        <div class="">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <h6 class="card-title">{{ product.price }}</h6>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p><strong>Category:</strong> {{ product.category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn-add-to-cart">Add to Cart</button>
+                                            </form>
+                                            <form method="post" action="{% url 'buy_now' product.id %}">
+                                                {% csrf_token %}
+                                                <input type="number" name="quantity" class="quantity-input" value="1" min="1" max="{{ product.stock }}">
+                                                <button type="submit" class="btn-buy-now">Buy Now</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Rating:
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Image Full Screen Modal -->
+    <div class="modal fade fullscreen-modal" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                    <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in images %}
+                                <div class="carousel-item active">
+                                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                                </div>
+                                {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+        </div>
+    </section>
+<section class="page-section bg-light" id="ratings">
+    <div class="container">
+        <h2 class="text-center">Ratings and Reviews</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Rating Distribution</h3>
+                {% for rating, percentage in ratings_distribution.items %}
+                <div class="rating-bar">
+                    <span>{{ rating }} stars</span>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">{{ percentage|floatformat:2 }}%</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Customer Reviews</h3>
+                {% for review in reviews %}
+                <div class="review">
+                    <strong>{{ review.user.username }}</strong>
+                    <p>{{ review.text }}</p>
+                    <small>
+                        {% for i in "12345" %}
+                        <i class="fas fa-star{% if forloop.counter > review.rating %}-half{% endif %}"></i>
+                        {% endfor %}
+                        - {{ review.created_at }}
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Reviews Section-->
+    <section class="page-section bg-light text-dark" id="product-details">
+        <div class="container">
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Product Details</h2>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <div class="row">
+                <!-- Ratings Bar Graph --> 
+                {% comment %} <div class="col-lg-4 mb-5">
+                    <h5 class="text-center">Rating Distribution</h5>
+                    <canvas id="ratingChart"></canvas>
+                </div> {% endcomment %}
+                <!-- Carbon Footprint Pie Chart -->
+                <div class="col-lg-6 mb-5">
+                    <h5 class="text-center">Carbon Footprint</h5>
+                    <canvas id="carbonFootprintChart"></canvas>
+                </div>
+                <!-- Best and Worst Reviews -->
+                <div class="col-lg-6 mb-5">
+                    <h5 class="text-center">Top Reviews</h5>
+                    % for review in reviews %}
+                    <div class="review">
+                        <strong>{{ review.user.username }}</strong>
+                        <p>{{ review.text }}</p>
+                        <small>
+                            {% for i in "12345" %}
+                            <i class="fas fa-star{% if forloop.counter > review.rating %}-half{% endif %}"></i>
+                            {% endfor %}
+                            - {{ review.created_at }}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Similar Products --> also show 6 products of same catogory with highest rating below 
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Similar Products</h2>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-lg-2 mb-5">
+                    <a href="">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{% static 'images/product1.jpg' %}" alt="Similar Product 1">
+                    </div>
+                     </a>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-5">
+                    <a href="">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{% static 'images/product1.jpg' %}" alt="Similar Product 1">
+                    </div>
+                     </a>
+                </div>
+                <div class="col-md-2 col-lg-2 mb-5">
+                    <a href="">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{% static 'images/product1.jpg' %}" alt="Similar Product 1">
+                    </div>
+                     </a>
+                </div>
+                <!-- More similar products... -->
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Location-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Location</h4>
+                    <p class="lead mb-0">Varkala, Kerala, India</p>
+                </div>
+                <!-- Footer Social Icons-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Follow Us</h4>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-dribbble"></i></a>
+                </div>
+                <!-- Footer About Text-->
+                <div class="col-lg-4">
+                    <h4 class="text-uppercase mb-4">About Green Urban</h4>
+                    <p class="lead mb-0">Leading the way in sustainable solutions for urban living. Join us in making a greener planet.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{% static 'homejs/scripts.js' %}"></script>
+    <!-- Chart.js Scripts -->
+    <script>
+        // Rating Bar Graph
+        var ctx = document.getElementById('ratingChart').getContext('2d');
+        var ratingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+                datasets: [{
+                    label: 'Ratings',
+                    data: [12, 8, 5, 2, 1], // Example data
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Carbon Footprint Pie Chart
+        var ctx = document.getElementById('carbonFootprintChart').getContext('2d');
+        var carbonFootprintChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Production', 'Transport', 'Packaging'],
+                datasets: [{
+                    label: 'Carbon Footprint',
+                    data: [10, 40, 15], // Example data
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        document.querySelectorAll('.favorite-icon').forEach(function(icon) {
+                icon.addEventListener('click', function() {
+                    this.classList.toggle('heart-active');
+                });
+            });
+        
+    </script>
+</body>
+
+</html>

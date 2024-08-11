@@ -1,0 +1,85 @@
+{% load static%}
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>GreenUrban</title>
+
+  <!-- slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+  <!-- fonts awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+  {% load compress %}
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/style.scss' %}">
+    {% endcompress %}
+</head>
+
+<body>
+  <div class="hero_area">
+    <!-- header section starts -->
+    <header class="header_section">
+      <nav class="navbar navbar-expand-lg custom_nav-container">
+        <div class="custom_menu-btn">
+          <button onclick="openNav()">
+            <span class="s-1"> </span>
+            <span class="s-2"> </span>
+            <span class="s-3"> </span>
+          </button>
+        </div>
+        <div id="myNav" class="overlay">
+          <div class="menu_btn-style ">
+            <button onclick="closeNav()">
+              <span class="s-1"> </span>
+              <span class="s-2"> </span>
+              <span class="s-3"> </span>
+            </button>
+          </div>
+          <div class="overlay-content">
+            <a class="active" href="{% url 'index' %}">
+              Home
+            </a>
+            <a class="" href="{% url 'about' %}">
+              About
+            </a>
+            <a class="" href="{% url 'about' %}">
+                About
+              </a>
+              <a class="" href="{% url 'login_view' %}">
+                Login
+              </a>
+              <a class="" href="{% url 'register_view' %}">
+                Register
+              </a>
+            
+           
+          </div>
+        </div>
+        <a class="navbar-brand mx-auto" href="{% url 'index' %}"> <!-- mx-auto class added for centering -->
+          <span>
+            GreenUrban
+          </span>
+        </a>
+        
+      </nav>
+    </header>
+    <!-- end header section -->
+{%block content%}{%endblock%}

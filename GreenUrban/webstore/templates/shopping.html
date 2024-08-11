@@ -1,0 +1,197 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Urban Shopping</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'homeassets/favicon.ico' %}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    <style>
+        .yellow {
+            color: orange;
+            position: bottom;
+          }
+
+          .search-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .search-bar input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+        }
+        
+        .search-bar i {
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">GreenUrban</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'account' %}">Account</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'logout_user' %}">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Masthead-->
+   
+    <!-- Portfolio Section-->
+   <br>
+    <!-- Shopping Section-->
+    <section class="page-section bg-light" id="shopping">
+        <div class="container">
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Shop Our Products</h2>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            
+            <!-- Search Bar -->
+            <form method="get" action="{% url 'shop_products' %}">
+                <div class="search-bar">
+                    <i class="fas fa-cog"></i>
+                    <input type="text" id="search-input" name="q" placeholder="Search products..." onkeyup="searchProducts()">
+                    <i class="fas fa-search" onclick="this.closest('form').submit();"></i>
+                </div>
+            </form>
+    
+            <div class="row" id="products-container">
+                <!-- Example Product -->
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-4 col-lg-3 mb-5 product-item">
+                        <div class="card h-100">
+                            <a href="{% url 'view_product' product.id %}">
+                                <img class="card-img-top" src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="yellow">
+                                        <a href="{% url 'view_product' product.id %}"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></a>
+                                        <a href="{% url 'add_to_favorites' product.id %}"><i class="fas fa-heart fa-2x" aria-hidden="true"></i></a>
+                                    </div>
+                                    <small class="yellow"> 
+                                        {% for _ in product.rating|times %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}                    
+                </div>
+                <!-- More products... -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Reviews Section-->
+    <section class="page-section bg-primary text-white" id="reviews">
+        <div class="container">
+            <h2 class="page-section-heading text-center text-uppercase text-white mb-0">Customer Reviews</h2>
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 mb-5">
+                    <div class="card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">John Doe</h5>
+                            <p class="card-text">Great products and excellent customer service. Highly recommend!</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-light">View Profile</button>
+                                </div>
+                                <small class="text-muted">Rating: 5.0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- More reviews... -->
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Location-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Location</h4>
+                    <p class="lead mb-0">Varkala, Kerala, India</p>
+                </div>
+                <!-- Footer Social Icons-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Follow Us</h4>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-dribbble"></i></a>
+                </div>
+                <!-- Footer About Text-->
+                <div class="col-lg-4">
+                    <h4 class="text-uppercase mb-4">About GreenUrban</h4>
+                    <p class="lead mb-0">GreenUrban is your one-stop shop for eco-friendly products and solutions. Join us in making the world a greener place!</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{% static 'homejs/scripts.js' %}"></script>
+    <script>
+        function searchProducts() {
+        const searchInput = document.getElementById('search-input').value.toLowerCase();
+        const products = document.getElementsByClassName('product-item');
+    
+        for (let i = 0; i < products.length; i++) {
+            let product = products[i];
+            let name = product.querySelector('.card-title').textContent.toLowerCase();
+            let description = product.querySelector('.card-text').textContent.toLowerCase();
+            
+            if (name.includes(searchInput) || description.includes(searchInput)) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        }
+    }
+    </script>
+</body>
+</html>

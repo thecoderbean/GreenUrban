@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>GreenUrban - Account</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'homeassets/favicon.ico' %}" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="#page-top">{{ user_data.email }}</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'account' %}">Account</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'logout_user' %}">LogOut</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Account Section-->
+        <header class="masthead bg-primary text-white text-center">
+            <div class="container d-flex align-items-center flex-column">
+                <!-- Masthead Avatar Image-->
+                {% if user_data.img %}
+                <img src="{{ user_data.img.url }}" alt="Profile Picture" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                <h1 class="masthead-heading text-uppercase mb-0">My account, {{ request.session.username }}</h1>
+                <!-- Icon Divider-->
+                <div class="divider-custom divider-light">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                {% endif %}
+                <h2 class="masthead-subheading mb-0">Account Balance: <i class="fas fa-coins"></i> 500 Coins</h2>
+            </div>
+        </header>
+        <section class="page-section bg-light" id="account">
+            <div class="container">
+                <div class="row">
+                    <!-- Account Information Section -->
+                    <div class="col-lg-4">
+                        <h2 class="text-uppercase">Account</h2>
+                        <form method="post" action="{% url 'profile_upload' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_name" class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" value="{{ user_data.name }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_email" class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ user_data.email }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_pincode" class="form-label">Pincode</label>
+                                <input type="text" name="pincode" class="form-control" value="{{ user_data.pincode }}" pattern="[0-9]{6}" title="Please enter a six-digit pincode." required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_number" class="form-label">Number</label>
+                                <input type="text" name="number" class="form-control" value="{{ user_data.number }}" pattern="[0-9]{10}" title="Please enter a ten-digit Indian phone number." required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_address" class="form-label">Address</label>
+                                <textarea name="address" class="form-control">{{ user_data.address }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                        <h2 class="text-uppercase mt-4">Change Password</h2>
+                        {% comment %} <form method="post" action="{% url 'change_password' %}">
+                            {% csrf_token %} {% endcomment %}
+                            <div class="mb-3">
+                                <label for="id_old_password" class="form-label">Old Password</label>
+                                <input type="password" name="old_password" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_new_password1" class="form-label">New Password</label>
+                                <input type="password" name="new_password1" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_new_password2" class="form-label">Confirm New Password</label>
+                                <input type="password" name="new_password2" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-warning">Change Password</button>
+                        </form>
+                    </div>
+                    <!-- Orders Section -->
+                    <div class="col-lg-4">
+                        <h2 class="text-uppercase">Orders</h2>
+                        {% for order in orders %}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ order.product.name }}</h4>
+                                <p class="card-text">Ordered on: {{ order.date_ordered }}</p>
+                                <p class="card-text">Status: {{ order.status }}</p>
+                                <a href="{% url 'order_summary' order.id %}" class="btn btn-primary">View Order</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <a href="{% url 'orders' %}" class="btn btn-secondary">View All Orders</a>
+                    </div>
+                    <!-- Favourites Section -->
+                    <div class="col-lg-4">
+                        <h2 class="text-uppercase">Favourites</h2>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">Favourite Item 1</a>
+                            <a href="#" class="list-group-item list-group-item-action">Favourite Item 2</a>
+                            <a href="#" class="list-group-item list-group-item-action">Favourite Item 3</a>
+                        </div>
+                        {% comment %} <a href="{% url 'favourites' %}" class="btn btn-secondary mt-4">View All Favourites</a> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'homejs/scripts.js' %}"></script>
+        <!-- SB Forms JS-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
+</html>

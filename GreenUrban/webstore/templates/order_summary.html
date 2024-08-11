@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Urban Shopping</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'homeassets/favicon.ico' %}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .mainWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            background-color: #f5f5f5;
+            margin: 20px 0;
+        }
+        .statusBar {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            position: relative;
+            
+            
+        }
+        .pBar {
+            position: absolute;
+            height: 5px;
+            width: 100%;
+            background-color: #c4c4c4;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .node {
+            background-color: #fff;
+            border: 2px solid #c4c4c4;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+        .node.done {
+            border-color: #1cbd2c;
+        }
+        .node .main {
+            display: none;
+        }
+        .node.done .main {
+            display: block;
+        }
+        .text {
+            display: none;
+        }
+        .node.done .text {
+            display: block;
+            color: #1cbd2c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">GreenUrban</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'account' %}">Account</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'logout_user' %}">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Product Details Section-->
+    <br><br><br><br><br>
+    <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Order Summary</h2>
+    <div class="divider-custom">
+        <div class="divider-custom-line"></div>
+        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+        <div class="divider-custom-line"></div>
+    </div>
+    <div class="container">
+        <h1>Order Summary</h1>
+        <h2>Order ID: {{ order.id }}</h2>
+        <p><strong>Product:</strong> {{ order.product.name }}</p>
+        <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+        <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+        <p><strong>Shipping Address:</strong> {{ user.address }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+
+        <!-- Progress Bar -->
+        <div class="mainWrapper">
+           <!-- templates/order_status.html -->
+<div class="statusBar">
+            <span class="pBar"></span>
+            <div class="node {% if order.status >= 1 %}done{% endif %}">
+                <div class="main m0 {% if order.status >= 1 %}done{% endif %}"></div>
+                <span class="text t0 {% if order.status >= 1 %}done{% endif %}">Placed</span>
+            </div>
+            <div class="node {% if order.status >= 2 %}done{% endif %}">
+                <div class="main m1 {% if order.status >= 2 %}done{% endif %}"></div>
+                <span class="text t1 {% if order.status >= 2 %}done{% endif %}">Conformed</span>
+            </div>
+            <div class="node {% if order.status >= 3 %}done{% endif %}">
+                <div class="main m2 {% if order.status >= 3 %}done{% endif %}"></div>
+                <span class="text t2 {% if order.status >= 3 %}done{% endif %}">Dispatched</span>
+            </div>
+            <div class="node {% if order.status >= 4 %}done{% endif %}">
+                <div class="main m3 {% if order.status >= 4 %}done{% endif %}"></div>
+                <span class="text t3 {% if order.status >= 4 %}done{% endif %}">Out for Delivery</span>
+            </div>
+            <div class="node {% if order.status >= 5 %}done{% endif %}">
+                <div class="main m4 {% if order.status >= 5 %}done{% endif %}"></div>
+                <span class="text t4 {% if order.status >= 5 %}done{% endif %}">Delivered</span>
+            </div>
+</div>
+
+        </div>
+
+        {% if order.status == 'Delivered' %}
+            <h2>Actions</h2>
+            <button>Return Product</button>
+            <button>Rate Product</button>
+            <button>Write Review</button>
+        {% endif %}
+
+        <h2>Actions</h2>
+        <form method="post" action="{% url 'cancel_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Cancel Order</button>
+        </form>
+
+        <!-- Billing Section -->
+        <h2>Billing</h2>
+        <div class="billing">
+            <p><strong>Product:</strong> {{ order.product.name }}</p>
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+        </div>
+
+        <!-- Payment Methods -->
+        <h2>Payment Methods</h2>
+        <div class="payment-methods">
+            <button>Pay with Credit Card</button>
+            <button>Pay with PayPal</button>
+        </div>
+    </div>
+
+    <!-- Footer-->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Location-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Location</h4>
+                    <p class="lead mb-0">Varkala, Kerala, India</p>
+                </div>
+                <!-- Footer Social Icons-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Follow Us</h4>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-fw fa-dribbble"></i></a>
+                </div>
+                <!-- Footer About Text-->
+                <div class="col-lg-4">
+                    <h4 class="text-uppercase mb-4">About Green Urban</h4>
+                    <p class="lead mb-0">Leading the way in sustainable solutions for urban living. Join us in making a greener planet.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{% static 'homejs/scripts.js' %}"></script>
+    <!-- Chart.js Scripts -->
+    <script>
+        var state = 0;
+        var stateMax = 4;
+
+        function next() {
+            console.log("Next", state);
+            // browser side functions here
+        }
+
+        function back() {
+            console.log("Back", state);
+            // browser side functions here
+        }
+
+        document.getElementById("next").addEventListener("click", function () {
+            if (state < stateMax) {
+                state++;
+                updateProgressBar();
+            }
+        });
+
+        document.getElementById("back").addEventListener("click", function () {
+            if (state > 0) {
+                state--;
+                updateProgressBar();
+            }
+        });
+
+        function updateProgressBar() {
+            // Update progress bar based on the state
+        }
+    </script>
+</body>
+</html>

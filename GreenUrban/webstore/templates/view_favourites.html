@@ -1,0 +1,216 @@
+{%load static%}
+<!DOCTYPE html>
+
+        <link rel="icon" type="image/x-icon" href="{% static 'homeassets/favicon.ico' %}" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="#page-top">GreenUrban</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'account' %}">Account</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'logout_user' %}">LogOut</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+       
+        <!-- Portfolio Section-->
+        <section class="page-section portfolio" id="portfolio">
+            <div class="container">
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Select services</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- Portfolio Grid Items-->
+                <div class="row justify-content-center">
+            <!-- Portfolio Item 7: Scrap Selling-->
+            {% block content %}
+            <div class="container">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Your Favorites</h2>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="row">
+                    {% for favorite in favorites %}
+                    <div class="col-md-4 col-lg-3 mb-5">
+                        <div class="card h-100">
+                            <a href="{% url 'view_product' favorite.product.id %}">
+                                <img class="card-img-top" src="{{ favorite.product.images.first.image.url }}" alt="{{ favorite.product.name }}">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ favorite.product.name }}</h5>
+                                <p class="card-text">{{ favorite.product.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="yellow"> 
+                                        {% for _ in favorite.product.rating|times %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endblock %}
+            </div>
+        </div>
+        </section> 
+        <!-- Footer-->
+        <footer class="footer text-center">
+            <div class="container">
+                <div class="row">
+                    <!-- Footer Location-->
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <h4 class="text-uppercase mb-4">Location</h4>
+                        <p class="lead mb-0">
+                            Adress
+                            <br />
+                            CEO Bestin SJ
+                        </p>
+                    </div>
+                    <!-- Footer Social Icons-->
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <h4 class="text-uppercase mb-4">Around the Web</h4>
+                        <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-linkedin-in"></i></a>
+                        <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-dribbble"></i></a>
+                    </div>
+                    <!-- Footer About Text-->
+                    <div class="col-lg-4">
+                        <h4 class="text-uppercase mb-4">About</h4>
+                        <p class="lead mb-0">
+                            
+                            Bestin S J - Student - CHMM College For Advanced
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Copyright Section-->
+        <div class="copyright py-4 text-center text-white">
+            <div class="container"><small>Copyright &copy; bestin_s_jorly</small></div>
+        </div>
+        <!-- Portfolio Modals-->
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'homejs/scripts.js'%}"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialize variables
+                let billingList = [];
+                let totalCost = 0;
+        
+                // Function to update the dynamic billing
+                function updateBilling() {
+                    const billingListElement = document.getElementById('billing-list');
+                    const totalCostElement = document.getElementById('total-cost');
+        
+                    // Clear previous content
+                    billingListElement.innerHTML = '';
+        
+                    // Populate the billing list
+                    billingList.forEach(item => {
+                        const [service, cost] = item.split(':');
+                        const li = document.createElement('li');
+                        li.textContent = `${service} - ${cost} rupees`;
+                        billingListElement.appendChild(li);
+                    });
+        
+                    // Update the total cost
+                    totalCostElement.textContent = totalCost;
+                }
+        
+                // Function to handle the "Add to Cart" button click
+                function addToCart() {
+                    // Implement the logic to add the selected services to the cart or perform any other action
+                    console.log('Services added to cart:', billingList);
+                    console.log('Total cost:', totalCost);
+        
+                    // You can add additional logic here, like sending data to the server or redirecting to a cart page.
+                }
+        
+                // Add click event listeners to all "Add to Bill" buttons
+                const addToBillButtons = document.querySelectorAll('.add-to-bill');
+                addToBillButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const data = this.getAttribute('data-service');
+                        const [service, cost] = data.split(':');
+        
+                        // Toggle service in the billing list
+                        const item = `${service}:${cost}`;
+                        if (billingList.includes(item)) {
+                            const index = billingList.indexOf(item);
+                            billingList.splice(index, 1);
+                            totalCost -= parseInt(cost, 10);
+                        } else {
+                            billingList.push(item);
+                            totalCost += parseInt(cost, 10);
+                        }
+        
+                        // Update the dynamic billing
+                        updateBilling();
+                    });
+                });
+        
+                // Add click event listener to the "Add to Cart" button
+                const addToCartButton = document.getElementById('add-to-cart');
+                addToCartButton.addEventListener('click', addToCart);
+            });
+        </script>
+        
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

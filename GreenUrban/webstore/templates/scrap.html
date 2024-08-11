@@ -1,0 +1,301 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrap Selling Interface</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'homecss/styles.css' %}" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+        input[type="file"] {
+            display: none;
+          }
+          
+          .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+          }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">Seller Console</a>
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account' %}">Account</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout_user' %}">LogOut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <!-- Scrap Prices Graphs -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Scrap Prices</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <canvas id="steelPriceChart"></canvas>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <canvas id="copperPriceChart"></canvas>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <canvas id="zincPriceChart"></canvas>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <canvas id="aluminumPriceChart"></canvas>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <canvas id="plasticPriceChart"></canvas>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <canvas id="mostProfitableChart"></canvas>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-primary">View More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrap Upload Section -->
+        <div class="row">
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Upload Scrap</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+            <div class="col-12">
+                {% comment %} <form method="post" action="{% url 'upload_scrap' %}" enctype="multipart/form-data">
+                    {% csrf_token %}  {% endcomment %}
+                    <div class="form-group">
+                        <label for="scrapCategory">Scrap Category</label>
+                        <select class="form-control" id="scrapCategory" name="scrapCategory">
+                            <option value="steel">Steel</option>
+                            <option value="copper">Copper</option>
+                            <option value="zinc">Zinc</option>
+                            <option value="aluminum">Aluminum</option>
+                            <option value="plastic">Plastic</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="scrapDescription">Description</label>
+                        <textarea class="form-control" id="scrapDescription" name="scrapDescription" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                    <div class="form-group">
+                        <label for="scrapImages">Upload Images 1</label>
+                        <input type="file" class="form-control-file" id="scrapImages1" name="scrapImages" multiple>
+                    </div>
+                    <div class="form-group">
+                        <label for="scrapImages">Upload Images 2</label>
+                        <input type="file" class="form-control-file" id="scrapImages2" name="scrapImages" multiple>
+                    </div>
+                    <div class="form-group">
+                        <label for="scrapImages">Upload Images 3</label>
+                        <input type="file" class="form-control-file" id="scrapImages" name="scrapImages" multiple>
+                    </div>
+                    <div class="form-group">
+                        <label for="scrapLocation">Location</label>
+                        <input type="text" class="form-control" id="scrapLocation" name="scrapLocation">
+                    </div>
+                </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pricing Table -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Scrap Pricing</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <input type="text" class="form-control" id="searchTable" placeholder="Search...">
+                    </div>
+                </div>
+                <table class="table table-bordered table-hover" id="pricingTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Market Price (₹/kg)</th>
+                            <th>Your Price (₹/kg)</th>
+                            <th>Redeemable Coins</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Steel</td>
+                            <td>₹45</td>
+                            <td>₹40</td>
+                            <td><i class="fas fa-coins"></i> 10</td>
+                        </tr>
+                        <tr>
+                            <td>Copper</td>
+                            <td>₹300</td>
+                            <td>₹290</td>
+                            <td><i class="fas fa-coins"></i> 50</td>
+                        </tr>
+                        <tr>
+                            <td>Zinc</td>
+                            <td>₹150</td>
+                            <td>₹145</td>
+                            <td><i class="fas fa-coins"></i> 30</td>
+                        </tr>
+                        <tr>
+                            <td>Aluminum</td>
+                            <td>₹100</td>
+                            <td>₹95</td>
+                            <td><i class="fas fa-coins"></i> 20</td>
+                        </tr>
+                        <tr>
+                            <td>Plastic</td>
+                            <td>₹20</td>
+                            <td>₹18</td>
+                            <td><i class="fas fa-coins"></i> 5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center mt-3">
+                    <button class="btn btn-primary">View More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Contributors -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Top Contributors</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">John Doe</h5>
+                                <p class="card-text">Coins Earned: <i class="fas fa-coins"></i> 200</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Jane Smith</h5>
+                                <p class="card-text">Coins Earned: <i class="fas fa-coins"></i> 180</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">John Doe</h5>
+                                <p class="card-text">Coins Earned: <i class="fas fa-coins"></i> 200</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">John Doe</h5>
+                                <p class="card-text">Coins Earned: <i class="fas fa-coins"></i> 200</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'homejs/scripts.js' %}"></script>
+    <!-- Chart.js Scripts -->
+    <script>
+        const createChart = (ctx, label, data, borderColor) => {
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+
+        const steelPriceChart = createChart(document.getElementById('steelPriceChart').getContext('2d'), 'Steel Price (₹/kg)', [40, 45, 50, 55, 60, 65, 70], 'rgba(75, 192, 192, 1)');
+        const copperPriceChart = createChart(document.getElementById('copperPriceChart').getContext('2d'), 'Copper Price (₹/kg)', [280, 290, 300, 310, 320, 330, 340], 'rgba(255, 99, 132, 1)');
+        const zincPriceChart = createChart(document.getElementById('zincPriceChart').getContext('2d'), 'Zinc Price (₹/kg)', [150, 160, 170, 180, 190, 200, 210], 'rgba(54, 162, 235, 1)');
+        const aluminumPriceChart = createChart(document.getElementById('aluminumPriceChart').getContext('2d'), 'Aluminum Price (₹/kg)', [100, 105, 110, 115, 120, 125, 130], 'rgba(255, 206, 86, 1)');
+        const plasticPriceChart = createChart(document.getElementById('plasticPriceChart').getContext('2d'), 'Plastic Price (₹/kg)', [20, 22, 24, 26, 28, 30, 32], 'rgba(153, 102, 255, 1)');
+        const mostProfitableChart = createChart(document.getElementById('mostProfitableChart').getContext('2d'), 'Most Profitable Scrap (₹/kg)', [200, 210, 220, 230, 240, 250, 260], 'rgba(255, 159, 64, 1)');
+
+        // Search function for the table
+        document.getElementById('searchTable').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#pricingTable tbody tr');
+
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchValue) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

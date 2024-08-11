@@ -1,0 +1,16 @@
+{% extends 'header.html' %}
+{% block content %}
+<div class="container">
+    <h1>OTP Verification</h1>
+    <p>An OTP has been sent to {{ email }}. Please enter it below to complete your registration.</p>
+    <form method="POST" action="{% url 'verify_otp' %}">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="form-group">
+            <label for="otp">OTP</label>
+            <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP">
+        </div>
+        <button type="submit" class="btn btn-primary">Verify OTP</button>
+    </form>
+</div>
+{% endblock %}

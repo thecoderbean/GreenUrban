@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Retailer Dashboard</title>
+        <link href="{% static 'homecss/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="text-center mt-5">Welcome, {{ retailer.company_name }}</h2>
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Company Information</h5>
+                            <p class="card-text"><strong>Phone Number:</strong> {{ retailer.phone_number }}</p>
+                            <p class="card-text"><strong>Address:</strong> {{ retailer.address }}</p>
+                            <p class="card-text"><strong>Registration Date:</strong> {{ retailer.registration_date }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

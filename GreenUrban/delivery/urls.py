@@ -1,0 +1,16 @@
+from django.urls import path
+from .views import DeliveryBoyLoginView, DeliveryBoyLogoutView, DeliveryDashboardView,order_dispatch, pickup_view, scan_qr_code, order_details, mark_as_out_for_delivery, start_qr_scanner
+
+urlpatterns = [
+    path('', DeliveryBoyLoginView.as_view(), name='delivery_boy_login'),
+    path('logout/', DeliveryBoyLogoutView.as_view(), name='delivery_boy_logout'),
+    path('dashboard/', DeliveryDashboardView.as_view(), name='delivery_dashboard'),
+    path('order_dispatch/', order_dispatch, name='order_dispatch'),
+    path('out_to_deliver/', order_dispatch, name='out_to_deliver'),
+    path('delivered/', order_dispatch, name='delivered'),
+    path('pickupview/', pickup_view, name='pickupview'),
+    path('scan_qr_code/', scan_qr_code, name='scan_qr_code'),
+    path('start_qr_scanner/', start_qr_scanner, name='start_qr_scanner'),
+    path('order_details/<int:order_id>/', order_details, name='order_details'),
+    path('mark_as_out_for_delivery/<int:order_id>/', mark_as_out_for_delivery, name='mark_as_out_for_delivery'),
+]
