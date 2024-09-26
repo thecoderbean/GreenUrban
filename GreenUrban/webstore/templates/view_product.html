@@ -175,10 +175,10 @@
                                 <div class="btn-group">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                                            {% comment %} <form method="post" action="{% url 'add_to_cart' product.id %}">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn-add-to-cart">Add to Cart</button>
-                                            </form>
+                                            </form> {% endcomment %}
                                             <form method="post" action="{% url 'buy_now' product.id %}">
                                                 {% csrf_token %}
                                                

@@ -38,16 +38,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Dashboard</a>
+                        <a class="nav-link" href="{% url 'delivery_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'order_dispatch' %}">Dispatch</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_dispatch' %}">Out to deliver</a>
+                        <a class="nav-link" href="{% url 'deliver' %}">Out to deliver</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_dispatch' %}">Delivered</a>
+                        <a class="nav-link" href="{% url 'out_for_delivery_orders' %}">Delivered</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'pickupview' %}">Pickup</a>

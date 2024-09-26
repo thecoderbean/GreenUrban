@@ -13,18 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <style>
-        input[type="file"] {
-            display: none;
-          }
-          
-          .custom-file-upload {
-            border: 1px solid #ccc;
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-          }
-    </style>
+   
+    
 </head>
 <body>
     <!-- Navigation -->
@@ -92,12 +82,14 @@
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
+           
             <div class="col-12">
-                {% comment %} <form method="post" action="{% url 'upload_scrap' %}" enctype="multipart/form-data">
-                    {% csrf_token %}  {% endcomment %}
+                <form method="POST" action="{% url 'upload_scrap' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
                     <div class="form-group">
                         <label for="scrapCategory">Scrap Category</label>
-                        <select class="form-control" id="scrapCategory" name="scrapCategory">
+                        <select class="form-control" id="scrapCategory" name="category" required>
                             <option value="steel">Steel</option>
                             <option value="copper">Copper</option>
                             <option value="zinc">Zinc</option>
@@ -108,28 +100,24 @@
                     </div>
                     <div class="form-group">
                         <label for="scrapDescription">Description</label>
-                        <textarea class="form-control" id="scrapDescription" name="scrapDescription" rows="3"></textarea>
-                    </div>
-                    <div class="row">
-                    <div class="form-group">
-                        <label for="scrapImages">Upload Images 1</label>
-                        <input type="file" class="form-control-file" id="scrapImages1" name="scrapImages" multiple>
+                        <textarea class="form-control" id="scrapDescription" name="description" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="scrapImages">Upload Images 2</label>
-                        <input type="file" class="form-control-file" id="scrapImages2" name="scrapImages" multiple>
+                        <label for="scrapImages1">Upload Image 1</label>
+                        <input type="file" class="form-control-file" id="scrapImages1" name="img1" required>
                     </div>
                     <div class="form-group">
-                        <label for="scrapImages">Upload Images 3</label>
-                        <input type="file" class="form-control-file" id="scrapImages" name="scrapImages" multiple>
+                        <label for="scrapImages2">Upload Image 2</label>
+                        <input type="file" class="form-control-file" id="scrapImages2" name="img2" required>
                     </div>
                     <div class="form-group">
-                        <label for="scrapLocation">Location</label>
-                        <input type="text" class="form-control" id="scrapLocation" name="scrapLocation">
+                        <label for="scrapImages3">Upload Image 3</label>
+                        <input type="file" class="form-control-file" id="scrapImages3" name="img3" required>
                     </div>
-                </div>
+                    <!-- Automatically populate user's address -->
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                
             </div>
         </div>
 

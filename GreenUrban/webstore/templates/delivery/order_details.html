@@ -58,19 +58,7 @@
                 </ul>
             </div>
         </nav>
-
         <!-- Dashboard Content -->
-        <div class="container">
-            
-            <h2>Order Dispatch</h2>
-            <form method="post" action="{% url 'scan_qr_code' %}">
-                {% csrf_token %}
-                <label for="order_id">Scan QR Code to get Order ID:</label>
-                <input type="text" id="order_id" name="order_id" required>
-                <button type="submit">Dispatch</button>
-            </form>
-           
-        </div>
         <div class="container">
         <h2>Order Details</h2>
         <p>Order ID: {{ order.id }}</p>

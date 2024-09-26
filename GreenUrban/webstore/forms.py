@@ -1,5 +1,5 @@
 from django import forms
-from .models import RegisteredUser
+from .models import RegisteredUser,Scrap
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
@@ -29,3 +29,8 @@ class LoginForm(forms.Form):
         username = cleaned_data.get("username")
         password = cleaned_data.get("password")
         return cleaned_data
+
+class ScrapForm(forms.ModelForm):
+    class Meta:
+        model = Scrap
+        fields = ['category', 'description', 'img1', 'img2', 'img3']

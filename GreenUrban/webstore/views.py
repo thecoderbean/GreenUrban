@@ -1,27 +1,24 @@
-import random
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import RegisteredUser,OTP
-from retailer.models import Product, ProductImage,ProductReview ,Favorite, Order
+from .models import RegisteredUser
+from retailer.models import Product, ProductImage, ProductReview, Favorite, Order
 from .forms import ProfilePictureForm, ProfileUpdateForm, RegistrationForm, LoginForm
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from .forms import ScrapForm
 
 def index(request):
     return render(request, 'index.html')
 
-
-
 def product_list(request):
     products = Product.objects.all()
     return render(request, 'shopping.html', {'products': products})
-
 
 def view_product(request, id):
     product = get_object_or_404(Product, id=id)
@@ -29,12 +26,10 @@ def view_product(request, id):
     reviews = ProductReview.objects.filter(product=product).order_by('-rating')
     total_images = images.count()
     
-    # Calculate the ratings distribution
     total_reviews = reviews.count()
     ratings_distribution = reviews.values('rating').annotate(count=Count('rating')).order_by('-rating')
     ratings_percentage = {rating['rating']: (rating['count'] / total_reviews) * 100 for rating in ratings_distribution}
 
-    # Fetch similar products of the same category with highest ratings
     similar_products = Product.objects.filter(category=product.category).exclude(id=product.id).order_by('-rating')[:6]
 
     return render(request, 'view_product.html', {
@@ -106,56 +101,27 @@ def profile_update(request):
     else:
         return redirect('login_view')
 
-def send_otp(email):
-    otp = random.randint(100000, 999999)
-    OTP.objects.create(email=email, otp=otp)
-    subject = "Your OTP for Account Registration"
-    message = f"Your OTP for account registration is {otp}."
-    send_mail(subject, message, 'your-email@gmail.com', [email])
-    return otp
-
 def register_user(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            otp = send_otp(email)
-            request.session['registration_data'] = form.cleaned_data
-            return render(request, 'otp_verification.html', {'email': email})
+            registration_data = form.cleaned_data
+            registered_user = RegisteredUser(
+                name=registration_data['name'],
+                email=registration_data['email'],
+                username=registration_data['username'],
+                pincode=registration_data['pincode'],
+                number=registration_data['number'],
+                address=registration_data['address'],
+            )
+            registered_user.set_password(registration_data['password'])
+            registered_user.save()
+            messages.success(request, 'User registered successfully. Please login!')
+            return redirect('login_view')
     else:
         form = RegistrationForm()
+
     return render(request, 'register.html', {'form': form})
-
-def verify_otp(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        otp = request.POST.get('otp')
-        try:
-            otp_record = OTP.objects.get(email=email, otp=otp)
-            registration_data = request.session.get('registration_data')
-            if registration_data:
-                registered_user = RegisteredUser(
-                    name=registration_data['name'],
-                    email=registration_data['email'],
-                    username=registration_data['username'],
-                    pincode=registration_data['pincode'],
-                    number=registration_data['number'],
-                    address=registration_data['address'],
-                )
-                registered_user.set_password(registration_data['password'])
-                registered_user.save()
-
-                # Send welcome email
-                subject = "Welcome to Our Platform"
-                message = "Thank you for registering. Welcome to our platform!"
-                send_mail(subject, message, 'your-email@gmail.com', [email])
-
-                messages.success(request, 'User registered successfully. Please login!')
-                return redirect('login_view')
-        except OTP.DoesNotExist:
-            messages.error(request, 'Invalid OTP. Please try again.')
-            return render(request, 'otp_verification.html', {'email': email})
-    return redirect('register_user')
 
 def login_user(request):
     if request.method == 'POST':
@@ -181,7 +147,6 @@ def logout_user(request):
     messages.success(request, 'Logout successful.')
     return redirect('index')
 
-
 def shop_products(request):
     query = request.GET.get('q', '')
     products = Product.objects.all()
@@ -197,12 +162,10 @@ def shop_products(request):
 
     return render(request, 'shop.html', {'products': products})
 
-
 def add_to_favorites(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     Favorite.objects.get_or_create(user=request.user, product=product)
     return redirect(request,'view_product', id=product_id)
-
 
 def view_favorites(request):
     favorites = Favorite.objects.filter(user=request.user)
@@ -218,13 +181,12 @@ def add_to_cart(request, product_id):
             product=product,
             quantity=quantity,
             total_price=product.price * quantity,
-            shipping_address=request.user.address,  # Assuming user's address is stored in the profile
+            shipping_address=request.user.address,
         )
         product.stock -= quantity
         product.save()
         return redirect('cart')
     else:
-        # Handle case where stock is insufficient
         return redirect('product_detail', product_id=product_id)
 
 @login_required
@@ -239,8 +201,8 @@ def buy_now(request, product_id):
             quantity=quantity,
             total_price=product.price * quantity,
             shipping_address=request.user.address,
-            status=1,  # Initially set to 'Order Placed'
-            delivery_boy_id=None,  # Initially set to None
+            status=1,
+            delivery_boy_id=None,
         )
         product.stock -= quantity
         product.save()
@@ -261,3 +223,19 @@ def cancel_order(request, order_id):
         order.status = 0  
         order.save()
     return redirect('order_summary', order_id=order_id)
+
+def upload_scrap(request):
+    if request.method == "POST":
+        form = ScrapForm(request.POST, request.FILES)
+        if form.is_valid():
+            scrap = form.save(commit=False)
+            scrap.user = request.user
+            scrap.save()
+            messages.success(request, 'Scrap uploaded successfully! Our pickup team will contact you when the pickup is scheduled.')
+            return redirect('home')
+        else:
+            print(form.errors)
+    else:
+        form = ScrapForm()
+
+    return render(request, 'scrap.html', {'form': form})

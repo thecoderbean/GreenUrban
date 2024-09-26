@@ -11,7 +11,6 @@ urlpatterns = [
     path('home', views.home, name='home'),
     path('account', views.account, name='account'),
     path('register_user', views.register_user, name='register_user'),
-    path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('login_user', views.login_user, name='login_user'),
     path('logout_user', views.logout_user, name='logout_user'),
     path('pic_upload', views.pic_upload, name='pic_upload'),
@@ -30,6 +29,7 @@ urlpatterns = [
     path('order_summary/<int:order_id>/', views.order_summary, name='order_summary'),
     path('cancel_order/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('retailer_login/', include('retailer.urls')),
+    path('upload-scrap/', views.upload_scrap, name='upload_scrap'),
     path('delivery_login/', include('delivery.urls')), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

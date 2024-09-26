@@ -38,16 +38,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Dashboard</a>
+                        <a class="nav-link" href="{% url 'delivery_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'order_dispatch' %}">Dispatch</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_dispatch' %}">Out to deliver</a>
+                        <a class="nav-link" href="{% url 'deliver' %}">Out to deliver</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'order_dispatch' %}">Delivered</a>
+                        <a class="nav-link" href="{% url 'out_for_delivery_orders' %}">Delivered</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'pickupview' %}">Pickup</a>
@@ -62,17 +62,35 @@
         <!-- Dashboard Content -->
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="text-center mt-5">Welcome, {{ retailer.company_name }}</h2>
-                    <div class="card mt-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Company Information</h5>
-                            <p class="card-text"><strong>Phone Number:</strong> {{ retailer.phone_number }}</p>
-                            <p class="card-text"><strong>Address:</strong> {{ retailer.address }}</p>
-                            <p class="card-text"><strong>Registration Date:</strong> {{ retailer.registration_date }}</p>
-                        </div>
-                    </div>
-                </div>
+                <h2>Pickup View - List of Scrap Items</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Images</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for scrap in scrap_items %}
+                            <tr>
+                                <td>
+                                    <!-- Link to user detail view -->
+                                    <a href="{% url 'user_detail' scrap.user.id %}">{{ scrap.user.username }}</a>
+                                </td>
+                                <td>{{ scrap.category }}</td>
+                                <td>{{ scrap.description }}</td>
+                                <td>
+                                    <!-- Display images -->
+                                    <img src="{{ scrap.img1.url }}" alt="Image 1" width="50">
+                                    <img src="{{ scrap.img2.url }}" alt="Image 2" width="50">
+                                    <img src="{{ scrap.img3.url }}" alt="Image 3" width="50">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
             </div>
            
         </div>

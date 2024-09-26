@@ -14,6 +14,10 @@ from django.middleware.csrf import get_token
 from pyzbar import pyzbar
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from webstore.models import Scrap  # Import your Scrap model
+from webstore.models import RegisteredUser  # Import your RegisteredUser model
+
+
 
 class DeliveryBoyLoginView(LoginView):
     form_class = DeliveryBoyLoginForm
@@ -47,7 +51,16 @@ def order_dispatch(request):
 
 @login_required
 def pickup_view(request):
-    return render(request, 'delivery/pickupview.html')
+    # Query all scrap items
+    scrap_items = Scrap.objects.select_related('user').all()  # Ensure related user is fetched
+
+    # Pass scrap items to the template
+    return render(request, 'delivery/pickupview.html', {'scrap_items': scrap_items})
+
+def user_detail(request, user_id):
+    
+    user = get_object_or_404(RegisteredUser, id=user_id)
+    return render(request, 'delivery/user_detail.html', {'user': user})
 
 @login_required
 def scan_qr_code(request):
@@ -167,3 +180,45 @@ def update_order_status(order_id, delivery_boy_id, status):
     except Exception as e:
         print(f"Error updating order status: {e}")
         return {'error': f'Error updating order {order_id}: {str(e)}'}
+    
+
+@login_required
+def out_to_deliver(request):
+    delivery_boy_id = request.user.id
+    # Fetch orders with status 'Dispatched' (status = 3) and assigned to the current delivery boy
+    orders = Order.objects.filter(status=3, delivery_boy_id=delivery_boy_id)
+
+    return render(request, 'delivery/out_to_deliver.html', {'orders': orders})
+
+@login_required
+def mark_as_out_for_delivery(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if order.status == 3:  # Ensure it's in the 'Dispatched' state before updating
+        order.status = 4  # Out for Delivery
+        order.save()
+    return redirect('order_details', order_id=order_id)
+
+@login_required
+def mark_as_delivered(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if order.status == 4:  # Ensure it's 'Out for Delivery' before marking it as delivered
+        order.status = 5  # Delivered
+        order.save()
+    return redirect('order_details', order_id=order_id)
+
+@login_required
+def out_for_delivery_orders(request):
+    # Get all orders that are out for delivery (status = 4)
+    orders = Order.objects.filter(status=4)
+    context = {
+        'orders': orders
+    }
+    return render(request, 'delivery/deliver.html', context)
+
+@login_required
+def mark_as_delivered(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if order.status == 4:  # Ensure it's 'Out for Delivery' before marking it as delivered
+        order.status = 5  # Delivered
+        order.save()
+    return redirect('out_for_delivery_orders')

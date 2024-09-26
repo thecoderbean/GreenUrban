@@ -13,8 +13,9 @@
                     <div>
                       <h1>
                          GreenUrban <br>
+                         Ecomerce
                       </h1>
-                      <a href="{% url 'about' %}" class="">
+                      <a href="#about" class="">
                         Read more
                       </a>
                     </div>
@@ -25,9 +26,9 @@
                     <div>
                       <h1>
                         Sustainable <br>
-                        Cityscapes
+                        Ecomerce
                       </h1>
-                      <a href="{% url 'about' %}" class="">
+                      <a href="#about" class="">
                         Read more
                       </a>
                     </div>
@@ -38,9 +39,9 @@
                     <div>
                       <h1>
                         Eco-friendly <br>
-                        Urban Views
+                        Packaging
                       </h1>
-                      <a href="{% url 'about' %}" class="">
+                      <a href="#about" class="">
                         Read more
                       </a>
                     </div>
@@ -83,7 +84,7 @@
 
   <!-- about section -->
 
-  <section class="about_section ">
+  <section class="about_section" id="about">
     <div class="container-fluid">
       <div class="row">
         <div class="img-box col-lg-8 col-md-7">
@@ -98,7 +99,7 @@
           <p>
             At Green Urban, we are dedicated to creating a better, greener world. As an agency affiliated with the Government of Kerala, our primary focus is on environmental sustainability and innovative waste management solutions. We believe that through collective effort and conscious living, we can reduce the negative impact of waste on our natural environment and build a healthier planet for future generations.
           </p>
-          <a href="{% url 'about' %}">
+          <a href="#about" class="">
             Read More
           </a>
         </div>
@@ -109,133 +110,131 @@
   <!-- end about section -->
 
   <!-- portfolio section -->
-
-  <section class="portfolio_section layout_padding">
+  <section class="portfolio_section layout_padding py-5">
     <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          Portfolio
-        </h2>
+      <div class="heading_container heading_center mb-5">
+        <h2>Portfolio</h2>
       </div>
-      <div class="portfolio_container ">
-        <div class="box-1">
-          <div class="img-box b-1">
-            <img src="{% static 'images/portfolio1.jpg' %}" alt="Green Urban 1">
-            <div class="btn-box">
-              <a href="" class="btn-1">
-                <i class="fa fa-share-alt" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-          <div class="img-box b-2">
-            <img src="{% static 'images/portfolio2.jpg' %}" alt="Green Urban 2">
-            <div class="btn-box">
-              <a href="" class="btn-1">
+      <div class="row g-4">
+        <!-- Portfolio Item 1 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio1.jpg' %}" class="img-fluid" alt="Green Urban 1">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
               </a>
             </div>
           </div>
         </div>
-        <div class="box-2">
-          <div class="box-2-top">
-            <div class="img-box b-3">
-              <img src="{% static 'images/portfolio3.jpg' %}" alt="Green Urban 3">
-              <div class="btn-box">
-                <a href="" class="btn-1">
-                  <i class="fa fa-share-alt" aria-hidden="true"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="box-3">
-          <div class="img-box b-1">
-            <img src="{% static 'images/portfolio4.jpg' %}" alt="Green Urban 4">
-            <div class="btn-box">
-              <a href="" class="btn-1">
-                <i class="fa fa-share-alt" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-          <div class="img-box b-2">
-            <img src="{% static 'images/portfolio5.jpg' %}" alt="Green Urban 5">
-            <div class="btn-box">
-              <a href="" class="btn-1">
+        <!-- Portfolio Item 2 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio2.jpg' %}" class="img-fluid" alt="Green Urban 2">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
               </a>
             </div>
           </div>
         </div>
-        <div class="box-4">
-          <div class="box-4-top">
-            <div class="img-box b-3">
-              <img src="{% static 'images/portfolio6.jpg' %}" alt="Green Urban 6">
-              <div class="btn-box">
-                <a href="" class="btn-1">
-                  <i class="fa fa-share-alt" aria-hidden="true"></i>
-                </a>
-              </div>
+        <!-- Portfolio Item 3 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio3.jpg' %}" class="img-fluid" alt="Green Urban 3">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Portfolio Item 4 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio4.jpg' %}" class="img-fluid" alt="Green Urban 4">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Portfolio Item 5 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio5.jpg' %}" class="img-fluid" alt="Green Urban 5">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Portfolio Item 6 -->
+        <div class="col-md-6 col-lg-4">
+          <div class="img-box position-relative">
+            <img src="{% static 'images/portfolio6.jpg' %}" class="img-fluid" alt="Green Urban 6">
+            <div class="btn-box position-absolute top-50 start-50 translate-middle">
+              <a href="#" class="btn-1">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  
 
   <!-- end portfolio section -->
 
   <!-- team section -->
 
-  <section class="team_section layout_padding">
+  <section class="team_section layout_padding py-5">
     <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          Meet Our Team
-        </h2>
+      <div class="heading_container heading_center mb-5">
+        <h2>Meet Our Team</h2>
       </div>
-      <div class="team_container">
-        <div class="box">
-          <div class="img-box">
-            <img src="{% static 'images/team1.jpg' %}" alt="Team Member 1">
-          </div>
-          <div class="detail-box">
-            <h4>
-             Bestin SJ
-            </h4>
-            <p>
-              CEO
-            </p>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card text-center border-0">
+            <div class="img-box">
+              <img src="{% static 'images/team1.jpg' %}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="Team Member 1">
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Bestin SJ</h4>
+              <p class="card-text">CEO</p>
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="{% static 'images/team2.jpg' %}" alt="Team Member 2">
-          </div>
-          <div class="detail-box">
-            <h4>
-              Bestin SJ
-            </h4>
-            <p>
-              Creative Director
-            </p>
+        <div class="col-md-4 mb-4">
+          <div class="card text-center border-0">
+            <div class="img-box">
+              <img src="{% static 'images/team2.jpg' %}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="Team Member 2">
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Bestin SJ</h4>
+              <p class="card-text">COO</p>
+            </div>
           </div>
         </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="{% static 'images/team3.jpg' %}" alt="Team Member 3">
-          </div>
-          <div class="detail-box">
-            <h4>
-              Bestin SJ
-            </h4>
-            <p>
-              Urban Planner
-            </p>
+        <div class="col-md-4 mb-4">
+          <div class="card text-center border-0">
+            <div class="img-box">
+              <img src="{% static 'images/team3.jpg' %}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="Team Member 3">
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Bestin SJ</h4>
+              <p class="card-text">CTO</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  
+  
 
   <!-- end team section -->
  <!-- login.html -->
